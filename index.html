@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 App - CDN Version</title>
+    
+    <style>
+        :root {
+            --font-geist: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #ffffff;
+            font-family: var(--font-geist);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        /* تنسيق حاوية الزر لتبدو احترافية */
+        #app {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <p>hello</p>
+        <div id="app">
+            <appkit-button></appkit-button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createAppKit } from 'https://esm.sh/@reown/appkit'
+        import { Ethers5Adapter } from 'https://esm.sh/@reown/appkit-adapter-ethers5'
+        import { mainnet, arbitrum, polygon } from 'https://esm.sh/@reown/appkit/networks'
+
+        // استخدام البروجكت آيدي الخاص بك
+        const projectId = 'Cb431b6f6e2a73a72983084a5bd30989';
+
+        // إعداد الشبكات (بمثابة الـ Chains في Wagmi)
+        const networks = [mainnet, arbitrum, polygon];
+
+        // إعداد المحول (بمثابة Web3Provider)
+        const ethersAdapter = new Ethers5Adapter();
+
+        // تهيئة الـ Modal
+        const modal = createAppKit({
+            adapters: [ethersAdapter],
+            networks,
+            metadata: {
+                name: 'Web3 CDN App',
+                description: 'Simple Wallet Connection',
+                url: window.location.origin,
+                icons: ['https://avatars.githubusercontent.com/u/37784886']
+            },
+            projectId,
+            themeMode: 'light', // يمكنك تغييره لـ 'dark'
+            features: {
+                analytics: true,
+                email: false, // تعطيل الدخول بالإيميل للتركيز على المحافظ فقط
+                socials: false
+            }
+        });
+
+        console.log("Web3 Modal Initialized with Project ID");
+    </script>
+</body>
+</html>
