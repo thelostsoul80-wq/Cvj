@@ -3,63 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 App</title>
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: sans-serif;
-            background-color: #f4f4f9;
-        }
-        p { font-size: 20px; color: #333; }
-        /* نضمن أن الحاوية لها مساحة لتجنب اختفاء الزر */
-        #button-container {
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+    <title>Web3 Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen">
 
-    <p>hello</p>
-    
-    <div id="button-container">
-        <appkit-button></appkit-button>
+    <div class="text-center">
+        <p class="text-xl text-gray-700 mb-6">hello</p>
+        
+        <div id="wallet-container">
+            <button id="btn-connect" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-all">
+                Connect Wallet
+            </button>
+        </div>
+
+        <div id="status" class="mt-4 text-sm text-gray-500"></div>
     </div>
 
     <script type="module">
-        // استيراد المكتبات بنسخ محددة لضمان الاستقرار
-        import { createAppKit } from 'https://esm.sh/@reown/appkit@1.1.0'
-        import { Ethers5Adapter } from 'https://esm.sh/@reown/appkit-adapter-ethers5@1.1.0'
-        import { mainnet, arbitrum } from 'https://esm.sh/@reown/appkit/networks'
+        // استيراد مباشر من CDN موثوق
+        import { createAppKit } from 'https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@1.1.0/dist/appkit.js'
+        import { Ethers5Adapter } from 'https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers5-cdn@1.1.0/dist/appkit-adapter-ethers5.js'
 
         const projectId = 'Cb431b6f6e2a73a72983084a5bd30989';
 
         try {
             const modal = createAppKit({
                 adapters: [new Ethers5Adapter()],
-                networks: [mainnet, arbitrum],
-                metadata: {
-                    name: 'My Web3 Site',
-                    description: 'Connect Wallet Test',
-                    url: window.location.origin,
-                    icons: ['https://avatars.githubusercontent.com/u/37784886']
-                },
+                networks: [{
+                    id: 1,
+                    name: 'Ethereum',
+                    network: 'mainnet',
+                    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                    rpcUrls: { default: { http: ['https://cloudflare-eth.com'] } }
+                }],
                 projectId: projectId,
-                features: {
-                    analytics: true
+                metadata: {
+                    name: 'Test App',
+                    url: window.location.origin
                 }
             });
-            console.log("AppKit Initialized Successfully");
-        } catch (error) {
-            console.error("Initialization failed:", error);
-            document.getElementById('button-container').innerHTML = '<p style="color:red">فشل تحميل محرك الربط</p>';
+
+            // ربط الزر اليدوي بفتح النافذة
+            document.getElementById('btn-connect').addEventListener('click', () => {
+                modal.open();
+            });
+
+            document.getElementById('status').innerText = "تم تحميل النظام بنجاح";
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status').innerText = "خطأ في تحميل المكتبة: " + e.message;
         }
     </script>
 </body>
